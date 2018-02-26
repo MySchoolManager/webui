@@ -1,2 +1,3 @@
 -- Schema
 CREATE DATABASE MySchoolManager;
+
