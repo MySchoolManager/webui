@@ -26,7 +26,7 @@ const routes = require("./controllers/loginController.js");
 
 APP.use(routes);
 
-DB.sequelize.sync({ force: true }).then(function() {
+DB.sequelize.sync().then(function() {
   APP.listen(PORT, function() {
     console.log("APP listening on PORT " + PORT);
   });
