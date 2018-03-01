@@ -1,1 +1,34 @@
-<h1>Index page</h1>
+<div class="ui middle aligned center aligned grid">
+  <div class="column">
+    <h2 class="ui green image header">
+      <img src="/assets/images/logo.png" class="image">
+      <div class="content">
+        My School Manager
+      </div>
+    </h2>
+    <form id="signin" class="ui large form">
+      <div class="ui stacked segment">
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="text" name="email" placeholder="E-mail address">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="lock icon"></i>
+            <input type="password" name="password" placeholder="Password">
+          </div>
+        </div>
+        <button type="submit" class="ui fluid large green submit button">Login</button>
+      </div>
+      <div class="ui error message"></div>
+    </form>
+    <div class="ui left warning message">
+      Forgot Password?
+      <a id="forget" href="/forgot">Reset Password</a>
+      <br> New to us?
+      <a href="/signup/user">Sign Up</a>
+    </div>
+  </div>
+</div>
