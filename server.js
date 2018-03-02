@@ -30,10 +30,7 @@ const homeRoutes = require("./controllers/homeController.js");
 APP.use(loginRoutes);
 APP.use(homeRoutes);
 
-let syncOpt = {force: true};
-if (env !== 'production') {
-  syncOpt = {force: true};
-}
+let syncOpt = {};
 
 DB.sequelize.sync(syncOpt).then(function() {
   APP.listen(PORT, function() {

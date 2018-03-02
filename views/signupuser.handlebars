@@ -23,16 +23,16 @@
         </div>
     </div>
     <div class="ui attached segment">
-        <form class="ui form">
+        <form class="ui form segment">
             <h4 class="ui dividing header">Personal Information</h4>
             <div class="field">
                 <label>Name</label>
                 <div class="two fields">
                     <div class="field">
-                        <input type="text" name="user[firstName]" placeholder="First Name">
+                        <input type="text" name="firstName" {{#if firstName}}value={{firstName}}{{/if}} placeholder="First Name">
                     </div>
                     <div class="field">
-                        <input type="text" name="user[lastName]" placeholder="Last Name">
+                        <input type="text" name="lastName" {{#if lastName}}value={{lastName}}{{/if}} placeholder="Last Name">
                     </div>
                 </div>
             </div>
@@ -40,19 +40,22 @@
                 <label>Address</label>
                 <div class="fields">
                     <div class="twelve wide field">
-                        <input type="text" name="user[address]" placeholder="Street Address">
+                        <input type="text" name="address1" {{#if address1}}value={{address1}}{{/if}} placeholder="Street Address">
                     </div>
                     <div class="four wide field">
-                        <input type="text" name="user[address2]" placeholder="Apt #">
+                        <input type="text" name="address2" {{#if address2}}value={{address2}}{{/if}} placeholder="Apt #">
                     </div>
                     <div class="four wide field">
-                        <input type="text" name="user[zipcode]" placeholder="Zip Code">
+                        <input type="text" name="zip" {{#if zip}}value={{zip}}{{/if}} placeholder="Zip Code">
                     </div>
                 </div>
             </div>
-            <div class="two fields">
+            <div class="three fields">
+                <div class="four wide field">
+                    <input type="text" name="city" {{#if city}}value={{city}}{{/if}} placeholder="City">
+                </div>
                 <div class="field">
-                    <select class="ui fluid dropdown">
+                    <select name="state" {{#if state}}value={{state}}{{/if}} class="ui fluid dropdown">
                         <option value="">State</option>
                         <option value="AL">Alabama</option>
                         <option value="AK">Alaska</option>
@@ -108,7 +111,7 @@
                     </select>
                 </div>
                 <div class="field">
-                    <select class="ui fluid dropdown">
+                    <select name="country" {{#if country}}value={{country}}{{/if}} class="ui fluid dropdown">
                         <option value="">Country</option>
                         <option value="US">United States</option>
                     </select>
@@ -118,7 +121,7 @@
                 <label>Phone</label>
                 <div class="two fields">
                     <div class="field">
-                        <input type="text" name="user[phone]" placeholder="(xxx)xxx-xxxx">
+                        <input type="text" name="phone" {{#if phone}}value={{phone}}{{/if}} placeholder="Mobile">
                     </div>
                 </div>
             </div>
@@ -127,19 +130,35 @@
                 <div class="field column row">
                     <div class="ui left icon input">
                         <i class="user icon"></i>
-                        <input type="text" name="email" placeholder="E-mail address">
+                        <input type="text" name="email" {{#if guid}}disabled{{/if}} {{#if email}}value={{email}}{{/if}} placeholder="E-mail address">
                     </div>
                 </div>
                 <div class="field column row">
                     <div class="ui left icon input">
                         <i class="lock icon"></i>
-                        <input type="password" name="password" placeholder="Password">
+                        <input type="password" name="password" {{#if guid}}disabled{{/if}} {{#if password}}value={{password}}{{/if}} placeholder="Password">
                     </div>
                 </div>
+                <input type="text" class="hiddenInput" disabled name="guid" {{#if guid}}value={{guid}}{{/if}}>
                 <div class="column row">
-                    <button type="submit" id="signupUserSubmit" class="ui green button" tabindex="0">Next</button>
+                    <button type="submit" id="signupUserSubmit" class="submit ui green button" tabindex="0">Next</button>
                 </div>
+            </div>
+            <div class="ui icon hidden message processing">
+                <div class="content">
+                    <div class="header">
+                        Just one second
+                    </div>
+                    <p>We're saving your Information.</p>
+                </div>
+            </div>
+            <div class="ui negative hidden message failed">
+                <div class="header">
+                    We're sorry we can't add this user
+                </div>
+                <p></p>
             </div>
         </form>
     </div>
 </div>
+<script src="/assets/js/signupUser.js"></script>
