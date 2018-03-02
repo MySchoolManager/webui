@@ -1,9 +1,7 @@
+
 module.exports = function(sequelize, DataTypes) {
-    var User = sequelize.define('User', {
-        firstName:
-        {type: DataTypes.STRING, allowNull: false, validate: {len: [1, 140]}},
-        lastName:
-        {type: DataTypes.STRING, allowNull: false, validate: {len: [1, 140]}},
+    var School = sequelize.define('School', {
+        name: {type: DataTypes.STRING, allowNull: false, validate: {len: [1, 255]}},
         address1:
         {type: DataTypes.STRING, allowNull: false, validate: {len: [1, 140]}},
         address2:
@@ -16,15 +14,10 @@ module.exports = function(sequelize, DataTypes) {
         zip: {type: DataTypes.STRING, allowNull: false, validate: {len: [1, 140]}},
         phone:
         {type: DataTypes.STRING, allowNull: false, validate: {len: [1, 140]}},
-        email:
-        {type: DataTypes.STRING, allowNull: false, validate: {len: [1, 140]}},
-        guid:
+        guid: {type: DataTypes.STRING, allowNull: false, validate: {len: [1, 140]}},
+        type:
         {type: DataTypes.STRING, allowNull: false, validate: {len: [1, 140]}}
     });
     
-    User.associate = function(models) {
-        User.belongsTo(models.School);
-    };
-    
-    return User;
+    return School;
 };
