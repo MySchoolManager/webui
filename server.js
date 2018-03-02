@@ -1,6 +1,7 @@
 const Express = require("express");
 const BodyParser = require("body-parser");
 const DB = require("./models");
+const env = process.env.NODE_ENV || 'development';
 
 const PORT = process.env.PORT || 3000;
 
@@ -22,11 +23,19 @@ APP.engine("handlebars", exphbs({ defaultLayout: "main" }));
 APP.set("view engine", "handlebars");
 
 // Import routes and give the server access to them.
-const routes = require("./controllers/loginController.js");
+const loginRoutes = require("./controllers/loginController.js");
+const homeRoutes = require("./controllers/homeController.js");
 
-APP.use(routes);
 
-DB.sequelize.sync().then(function() {
+APP.use(loginRoutes);
+APP.use(homeRoutes);
+
+let syncOpt = {force: true};
+if (env !== 'production') {
+  syncOpt = {force: true};
+}
+
+DB.sequelize.sync(syncOpt).then(function() {
   APP.listen(PORT, function() {
     console.log("APP listening on PORT " + PORT);
   });
