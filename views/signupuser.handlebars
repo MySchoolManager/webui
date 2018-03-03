@@ -125,25 +125,27 @@
                     </div>
                 </div>
             </div>
-            <h4 class="ui dividing header">Login Information</h4>
-            <div class="ui two column">
-                <div class="field column row">
-                    <div class="ui left icon input">
-                        <i class="user icon"></i>
-                        <input type="text" name="email" {{#if guid}}disabled{{/if}} {{#if email}}value={{email}}{{/if}} placeholder="E-mail address">
+            {{#unless guid}}
+                <h4 class="ui dividing header">Login Information</h4>
+                <div class="ui two column">
+                    <div class="field column row">
+                        <div class="ui left icon input">
+                            <i class="user icon"></i>
+                            <input type="text" name="email" {{#if email}}value={{email}}{{/if}} placeholder="E-mail address">
+                        </div>
+                    </div>
+                    <div class="field column row">
+                        <div class="ui left icon input">
+                            <i class="lock icon"></i>
+                            <input type="password" name="password" {{#if password}}value={{password}}{{/if}} placeholder="Password">
+                        </div>
+                    </div>
+                    <input type="text" class="hiddenInput" disabled name="guid" {{#if guid}}value={{guid}}{{/if}}>
+                    <div class="column row">
+                        <button type="submit" id="signupUserSubmit" class="submit ui green button" tabindex="0">Next</button>
                     </div>
                 </div>
-                <div class="field column row">
-                    <div class="ui left icon input">
-                        <i class="lock icon"></i>
-                        <input type="password" name="password" {{#if guid}}disabled{{/if}} {{#if password}}value={{password}}{{/if}} placeholder="Password">
-                    </div>
-                </div>
-                <input type="text" class="hiddenInput" disabled name="guid" {{#if guid}}value={{guid}}{{/if}}>
-                <div class="column row">
-                    <button type="submit" id="signupUserSubmit" class="submit ui green button" tabindex="0">Next</button>
-                </div>
-            </div>
+            {{/unless}}
             <div class="ui icon hidden message processing">
                 <div class="content">
                     <div class="header">

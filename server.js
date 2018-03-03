@@ -2,10 +2,13 @@ const Express = require("express");
 const BodyParser = require("body-parser");
 const DB = require("./models");
 const env = process.env.NODE_ENV || 'development';
+const APP = Express();
+
+const FireBaseUtil = require('./firebaseutil');
+const firebaseInstance = new FireBaseUtil(APP);
+firebaseInstance.initialize();
 
 const PORT = process.env.PORT || 3000;
-
-const APP = Express();
 
 // Serve static content for the APP from the "public" directory in the application directory.
 APP.use(Express.static("public"));
@@ -23,12 +26,8 @@ APP.engine("handlebars", exphbs({ defaultLayout: "main" }));
 APP.set("view engine", "handlebars");
 
 // Import routes and give the server access to them.
-const loginRoutes = require("./controllers/loginController.js");
-const homeRoutes = require("./controllers/homeController.js");
-
-
-APP.use(loginRoutes);
-APP.use(homeRoutes);
+require("./controllers/loginController")(APP, firebaseInstance);
+require("./controllers/homeController")(APP, firebaseInstance);
 
 let syncOpt = {};
 
