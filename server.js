@@ -28,7 +28,8 @@ var hbs = exphbs.create({
   // Specify helpers which are only registered on this instance.
   defaultLayout: 'main',
   helpers: {
-      equals: function (a, b) { return a === b ? "selected" : ''; }
+      equals: function (lhs, rhs) { return lhs === rhs ? "selected" : ''; },
+      includes: function (arrayInput, item) { return arrayInput && arrayInput.split(',').includes(item) ? "selected" : ''; }
   }
 });
 
@@ -37,11 +38,14 @@ APP.set('view engine', 'handlebars');
 
 // Import routes and give the server access to them.
 require('./controllers/loginController')(APP, firebaseInstance);
+require('./controllers/signUpController')(APP, firebaseInstance);
 require('./controllers/homeController')(APP, firebaseInstance);
+
 
 let syncOpt = {};
 
 function errorHandler(err, req, res, next) {
+  console.log('errorHandler');
   res.redirect('/servererror');
 };
 

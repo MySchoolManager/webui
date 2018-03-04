@@ -49,8 +49,7 @@ $(function() {
     // @param {string} password validated user password
     firebaseUtilObj.prototype.signInUser = function(email, password) {
       return firebase.auth()
-          .signInWithEmailAndPassword(email, password)
-          .catch(this.erroCallBack);
+          .signInWithEmailAndPassword(email, password);
     };
     
     // Sends password reset email
@@ -63,8 +62,7 @@ $(function() {
 
     // Sign out user utility
     firebaseUtilObj.prototype.signOutUser = function() {
-      this.removeOnlineUser();
-      firebase.auth().signOut();
+      return firebase.auth().signOut();
     };
 
     // Redirect to error page

@@ -26,11 +26,12 @@ const FireBaseUtil = (function() {
       });
 
       this.app.use(session({
-        store: new FirebaseStore({database: ref.database()}),
         secret: 'keyboard cat',
         resave: false,
         saveUninitialized: false
       }));
+
+      this.database = ref.database();
     };
 
     // Creates user
@@ -51,6 +52,15 @@ const FireBaseUtil = (function() {
     // @param {object} child child object that needs to be added
     this.pushChild = function(reference, child) {
       return this.database.ref(reference).push(child);
+    };
+
+    this.signInUser = function(email, password) {
+      return firebase.auth()
+          .signInWithEmailAndPassword(email, password);
+    };
+
+    this.signOutUser = function() {
+      firebase.auth().signOut();
     };
 
     // Removes a child from list of elements in Firebase
