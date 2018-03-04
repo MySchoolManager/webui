@@ -1,31 +1,31 @@
-var express = require("express");
+const db = require('../models');
 
-var router = express.Router();
+module.exports = function(app, firebaseInstance) {
+  // Create all our routes and set up logic within those routes where required.
+  app.get('/', function(req, res) {
+    res.render('index');
+  });
 
-// Create all our routes and set up logic within those routes where required.
-router.get("/", function(req, res) {
-    res.render("index");
-});
+  app.get('/forgot', function(req, res) {
+    res.render('forgot');
+  });
 
-router.get("/forgot", function(req, res) {
-    res.render("forgot", {email: "test"});
-});
+  app.get('/resetsuccess/:email', function(req, res) {
+    res.render('resetsuccess', {email: req.params.email});
+  });
 
-router.get("/signup", function(req, res) {
-    res.redirect("/signup/user");
-});
+  app.get('/servererror', function(req, res) {
+    console.log('servererror');
+    res.render('servererror');
+  });
 
-router.get("/signup/user", function(req, res) {
-    res.render("signupuser");
-});
+  app.post('/api/signin/:uid', function(req, res) {
+    req.session.uid = req.params.uid;
+    res.status(200).send({message: 'User Logged in'});
+  });
 
-router.get("/signup/school", function(req, res) {
-    res.render("signupschool");
-});
-
-router.get("/signup/success", function(req, res) {
-    res.render("signupsuccess");
-});
-
-// Export routes for server.js to use.
-module.exports = router;
+  app.get('/signout', function(req, res) {
+    req.session.uid = null;
+    res.redirect('/');
+  });
+};
