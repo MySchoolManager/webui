@@ -47,10 +47,16 @@ module.exports = function(app, firebaseInstance) {
                   } else {
                     res.render('signupschool');
                   }
+                })
+                .catch(function() {
+                  res.render('servererror');
                 });
           } else {
             res.render('signupschool');
           }
+        })
+        .catch(function() {
+          res.render('servererror');
         });
   });
 
