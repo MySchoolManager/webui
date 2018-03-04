@@ -14,13 +14,11 @@ $(function() {
   // create sidebar and attach to menu open
   $('.ui.sidebar').sidebar('attach events', '.toc.item');
 
-  $('.signout').on('click', function(event){
+  $('.signout').on('click', function(event) {
     event.stopPropagation();
     event.preventDefault();
-    app.firebaseInstance.signOutUser().then(function(){
-      $.ajax({
-        url: '/signout'
-      });
+    app.firebaseInstance.signOutUser().then(function() {
+      $.ajax({url: '/signout'});
     });
   });
 });

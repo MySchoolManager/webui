@@ -38,7 +38,11 @@ $(function() {
                    method: 'POST'
                  })
                     .done(function() {
-                      window.location = '/signup/success';
+                      if (window.location.pathname.indexOf('signup') === -1) {
+                        window.location = '/school';
+                      } else {
+                        window.location = '/signup/success';
+                      }
                     })
                     .fail(function(error, textMessage, state) {
                       $(this).removeClass('loading');
@@ -57,7 +61,7 @@ $(function() {
         if (types && types.length) {
           $('.form').form('set values', {type: types.split(',')});
         }
-        
+
         if (!$('.form').form('get value', 'guid')) {
           const timeStamp = new Date().getTime();
           $('.form').form('set values', {
