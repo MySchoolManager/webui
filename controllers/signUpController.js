@@ -23,8 +23,7 @@ module.exports = function(app, firebaseInstance) {
           }
         })
         .catch(function() {
-  console.log('signup error');          
-          
+          console.log('signup error');
           res.render('servererror');
         });
   });
@@ -48,16 +47,10 @@ module.exports = function(app, firebaseInstance) {
                   } else {
                     res.render('signupschool');
                   }
-                })
-                .catch(function() {
-                  res.render('servererror');
                 });
           } else {
             res.render('signupschool');
           }
-        })
-        .catch(function() {
-          res.render('servererror');
         });
   });
 
