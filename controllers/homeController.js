@@ -1,11 +1,6 @@
-var express = require("express");
-
-var router = express.Router();
-
-// Create all our routes and set up logic within those routes where required.
-router.get("/home", function(req, res) {
-    res.render("home");
-});
-
-// Export routes for server.js to use.
-module.exports = router;
+module.exports = function(app, firebaseInstance) {
+  // Create all our routes and set up logic within those routes where required.
+  app.get('/home', function(req, res) {
+    res.render('home');
+  });
+};
