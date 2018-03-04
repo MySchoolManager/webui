@@ -38,7 +38,11 @@ $(function() {
               window.location.pathname.indexOf('servererror') === -1) {
             window.location = '/home';
           }
-        } else if (window.location.pathname !== '/') {
+        } else if (
+            window.location.pathname !== '/' &&
+            window.location.pathname.indexOf('forgot') === -1 &&
+            window.location.pathname.indexOf('servererror') === -1 &&
+            window.location.pathname.indexOf('resetsuccess') === -1) {
           window.location = '/';
         }
       }
@@ -48,16 +52,12 @@ $(function() {
     // @param {string} email validated user email
     // @param {string} password validated user password
     firebaseUtilObj.prototype.signInUser = function(email, password) {
-      return firebase.auth()
-          .signInWithEmailAndPassword(email, password);
+      return firebase.auth().signInWithEmailAndPassword(email, password);
     };
-    
+
     // Sends password reset email
-    firebaseUtilObj.prototype.resetPassword = function(email, successCallback) {
-      firebase.auth()
-          .sendPasswordResetEmail(email)
-          .then(successCallback)
-          .catch(this.erroCallBack);
+    firebaseUtilObj.prototype.resetPassword = function(email) {
+      return firebase.auth().sendPasswordResetEmail(email);
     };
 
     // Sign out user utility

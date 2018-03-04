@@ -7,7 +7,11 @@ module.exports = function(app, firebaseInstance) {
   });
 
   app.get('/forgot', function(req, res) {
-    res.render('forgot', {email: 'test'});
+    res.render('forgot');
+  });
+
+  app.get('/resetsuccess/:email', function(req, res) {
+    res.render('resetsuccess', {email: req.params.email});
   });
 
   app.get('/servererror', function(req, res) {
