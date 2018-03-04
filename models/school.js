@@ -70,6 +70,6 @@ module.exports = function(sequelize, DataTypes) {
     });
     School.associate = function(models) {
       School.hasMany(models.User);
-    }
+    };
     return School;
   };

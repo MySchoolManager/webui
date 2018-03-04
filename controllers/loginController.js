@@ -11,17 +11,25 @@ module.exports = function(app, firebaseInstance) {
   });
 
   app.get('/signup', function(req, res) {
-    res.redirect('/signup/user');
+      res.redirect('/signup/user');
   });
 
   app.get('/signup/user', function(req, res) {
-    res.render('signupuser');
+    if (req.session.uid) {
+      res.redirect(`/signup/user/${req.session.uid}`);
+    } else {
+      res.render('signupuser');
+    }
   });
 
   app.get('/signup/user/:uid', function(req, res) {
     db.User.findOne({where: {guid: req.params.uid}})
         .then(function(user) {
-          res.render('signupuser', user.dataValues);
+          if (user && user.dataValues) {
+            res.render('signupuser', user.dataValues);
+          } else {
+            res.render('signupuser');
+          }
         })
         .catch(function() {
           res.render('servererror');
@@ -29,7 +37,45 @@ module.exports = function(app, firebaseInstance) {
   });
 
   app.get('/signup/school', function(req, res) {
-    res.render('signupschool');
+    if (req.session.firetoken) {
+      firebaseInstance.getUser(req.session.firetoken)
+          .then(function(decodedToken) {
+            if (decodedToken) {
+              res.redirect(`/signup/school/${req.session.uid}`);
+            } else {
+              res.redirect('/');
+            }
+          })
+          .catch(function(error) {
+            res.redirect('/servererror');
+          });
+    } else {
+      res.render('signupschool');
+    }
+  });
+
+  app.get('/signup/school/:uid', function(req, res) {
+    db.User.findOne({where: {guid: req.params.uid}})
+        .then(function(user) {
+          if (user.SchoolId) {
+            db.School.findOne({where: {id: user.SchoolId}})
+                .then(function(school) {
+                  if (school && school.dataValues) {
+                    res.render('signupschool', school.dataValues);
+                  } else {
+                    res.render('signupschool');
+                  }
+                })
+                .catch(function() {
+                  res.render('servererror');
+                });
+          } else {
+            res.render('signupschool');
+          }
+        })
+        .catch(function() {
+          res.render('servererror');
+        });
   });
 
   app.get('/signup/success', function(req, res) {
@@ -41,12 +87,11 @@ module.exports = function(app, firebaseInstance) {
         .then(function(data) {
           const userData = Object.assign({}, req.body);
           userData.guid = data.uid;
+          req.session.uid = data.uid;          
           delete userData.password;
 
           db.User.create(userData)
-              .then(function(dbTodo) {
-                // We have access to the new todo as an argument inside of the
-                // callback function
+              .then(function(user) {
                 res.status(200).send({message: 'User created'});
               })
               .catch(function(error) {
@@ -65,20 +110,49 @@ module.exports = function(app, firebaseInstance) {
     delete userData.id;
     delete userData.email;
 
-    console.log(guid);
-    console.log(userData);
-
     db.User.update(userData, {where: {guid: guid}})
-        .then(function(dbTodo) {
-          // We have access to the new todo as an argument inside of the
-          // callback function
-          res.status(200).send({message: 'User created'});
+        .then(function() {
+          res.status(200).send({message: 'User updated'});
         })
         .catch(function(error) {
           res.status(500).send({message: error.message});
         });
   });
 
+  app.post('/api/create/school', function(req, res) {
+    firebaseInstance.createSchool()
+        .then(function(data) {
+          const schoolData = Object.assign({}, req.body);
+          schoolData.guid = data.uid;
+          delete schoolData.password;
+
+          db.School.create(schoolData)
+              .then(function() {
+                res.status(200).send({message: 'School created'});
+              })
+              .catch(function(error) {
+                res.status(500).send({message: error.message});
+              });
+        })
+        .catch(function(error) {
+          res.status(400).send({message: error.message});
+        });
+  });
+
+  app.post('/api/update/school', function(req, res) {
+    const schoolData = Object.assign({}, req.body);
+    const guid = schoolData.guid;
+    delete schoolData.guid;
+    delete schoolData.id;
+
+    db.School.update(schoolData, {where: {guid: guid}})
+        .then(function() {
+          res.status(200).send({message: 'School updated'});
+        })
+        .catch(function(error) {
+          res.status(500).send({message: error.message});
+        });
+  });
 
   app.get('/servererror', function(req, res) {
     res.render('servererror');

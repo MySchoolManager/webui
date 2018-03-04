@@ -30,7 +30,6 @@ $(function() {
           .on('submit', function(event) {
             event.stopPropagation();
             event.preventDefault();
-            console.log();
             if ($(this).form('is valid')) {
               var formData = $(this).addClass('loading').form('get values');
               $(this).find('.processing').removeClass('hidden');
@@ -63,17 +62,18 @@ $(function() {
           });
 
       if (!$('.form').form('get value', 'guid')) {
+        const timeStamp = new Date().getTime();
         $('.form').form('set values', {
-          firstName: 'Test Value',
-          lastName: 'Test Value',
-          address1: 'Test Value',
-          address2: 'Test Value',
-          zip: 123456,
-          city: 'Test Value',
+          firstName: 'First Name ' + timeStamp,
+          lastName: 'Last Name ' + timeStamp,
+          address1: 'Address 1 ' + timeStamp,
+          address2: 'Address 2 ' + timeStamp,
+          zip: timeStamp,
+          city: 'City ' + timeStamp,
           state: 'CA',
           country: 'US',
           phone: 1234567890,
-          email: `test${new Date().getTime()}@test.com`,
+          email: `testuser@ucbtest.com`,
           password: 'TestValue'
         });
       }

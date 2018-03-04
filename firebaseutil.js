@@ -28,8 +28,8 @@ const FireBaseUtil = (function() {
       this.app.use(session({
         store: new FirebaseStore({database: ref.database()}),
         secret: 'keyboard cat',
-        resave: true,
-        saveUninitialized: true
+        resave: false,
+        saveUninitialized: false
       }));
     };
 
@@ -40,6 +40,10 @@ const FireBaseUtil = (function() {
     this.createUser = function(user) {
       return firebase.auth().createUser(
           {email: user.email, password: user.password});
+    };
+
+    this.createSchool = function() {
+      return this.pushChild('/schools', {});
     };
 
     // Function to add a child to a list in firebase database

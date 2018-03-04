@@ -34,17 +34,12 @@ $(function() {
       // else route to sign in page
       if (window.location.pathname.indexOf('signup') === -1) {
         if (user) {
-          window.location = '/home';
+          if (window.location.pathname.indexOf('home') === -1 &&
+              window.location.pathname.indexOf('servererror') === -1) {
+            window.location = '/home';
+          }
         } else if (window.location.pathname !== '/') {
           window.location = '/';
-        }
-      } else if (window.location.pathname.indexOf('user') !== -1) {
-        if (user && window.location.pathname.indexOf(user.uid) === -1) {
-          window.location = `/signup/user/${user.uid}`;
-        }
-      } else if (window.location.pathname.indexOf('school') !== -1) {
-        if (user && window.location.pathname.indexOf(user.uid) === -1) {
-          window.location = `/signup/school/${user.uid}`;
         }
       }
     };
@@ -57,7 +52,7 @@ $(function() {
           .signInWithEmailAndPassword(email, password)
           .catch(this.erroCallBack);
     };
-
+    
     // Sends password reset email
     firebaseUtilObj.prototype.resetPassword = function(email, successCallback) {
       firebase.auth()
