@@ -34,8 +34,7 @@ $(function() {
       // else route to sign in page
       if (window.location.pathname.indexOf('signup') === -1) {
         if (user) {
-          if (window.location.pathname.indexOf('home') === -1 &&
-              window.location.pathname.indexOf('servererror') === -1) {
+          if (window.location.pathname === '/') {
             window.location = '/home';
           }
         } else if (
