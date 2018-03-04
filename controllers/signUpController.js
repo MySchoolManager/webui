@@ -23,8 +23,7 @@ module.exports = function(app, firebaseInstance) {
           }
         })
         .catch(function() {
-  console.log('signup error');          
-          
+          console.log('signup error');
           res.render('servererror');
         });
   });

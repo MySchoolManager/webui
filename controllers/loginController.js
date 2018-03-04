@@ -15,7 +15,6 @@ module.exports = function(app, firebaseInstance) {
   });
 
   app.get('/servererror', function(req, res) {
-    console.log('servererror');
     res.render('servererror');
   });
 

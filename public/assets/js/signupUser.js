@@ -39,7 +39,11 @@ $(function() {
                  })
                     .done(function() {
                       if (formData.guid) {
-                        window.location = '/signup/school';
+                        if (window.location.pathname.indexOf('signup') === -1) {
+                          window.location = '/user/' + formData.guid;
+                        } else {
+                          window.location = '/signup/school';
+                        }
                       } else {
                         app.firebaseInstance
                             .signInUser(formData.email, formData.password)
