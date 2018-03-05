@@ -47,6 +47,10 @@ const FireBaseUtil = (function() {
       return this.pushChild('/schools', {});
     };
 
+    this.createNotification = function() {
+      return this.pushChild('/notifications', {});
+    };
+
     // Function to add a child to a list in firebase database
     // @param {string} reference to the list in firebase database to which child has to be added
     // @param {object} child child object that needs to be added

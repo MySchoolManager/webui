@@ -29,6 +29,8 @@ module.exports = function(sequelize, DataTypes) {
 
   Message.associate = function(models) {
     Message.hasOne(models.User, {as: "sender"});
-  }
+    Message.belongsTo(models.School);    
+  };
+  
   return Message;
 };

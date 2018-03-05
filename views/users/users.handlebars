@@ -22,7 +22,7 @@
 </div>
 <!-- Page Contents -->
 <div class="pusher">
-    <div class="ui inverted  vertical masthead center aligned segment">
+    <div class="ui inverted  vertical masthead aligned segment">
         <div class="ui container">
             <div class="ui large secondary inverted  pointing menu">
                 <a class="toc item">
@@ -37,29 +37,20 @@
                 </div>
             </div>
         </div>
-        <div class="ui text container">
-            <h1 class="ui inverted  header">
-                My School Manager
-            </h1>
-            <h2>One window communicator for Teachers, Parents and Students</h2>
-        </div>
-    </div>
-    <div class="ui vertical stripe segment">
-        <div class="ui middle aligned stackable grid container">
-            <div class="row">
-            </div>
-            <div class="row">
-            </div>
-        </div>
-    </div>
-    <div class="ui inverted  vertical footer segment">
         <div class="ui container">
-            <div class="ui stackable inverted  divided equal height stackable grid">
-                <div class="three wide column">
-                    <h4 class="ui inverted  header">About</h4>
+            <div class="ui list">
+                {{#each users}}
+                <div class="item">
+                    <img class="ui avatar image" src="/assets/images/rachel.png">
+                    <div class="content">
+                        <a href="/user/{{guid}}" class="header">{{firstName}} {{lastName}}</a>
+                    </div>
                 </div>
-                <div class="three wide column">
-                    <h4 class="ui inverted  header">Services</h4>
+                {{/each}}
+            </div>
+            <div class="ui two column ">
+                <div class="column row ">
+                    <a class="ui primary button" href="/create/user">Create New User</a>
                 </div>
             </div>
         </div>

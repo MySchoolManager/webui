@@ -17,4 +17,9 @@ $(function() {
     const signUp = new app.signUp();
     signUp.initialize();
   }
+
+  if (app.notification) {
+    const notification = new app.notification();
+    notification.initialize();
+  }
 });

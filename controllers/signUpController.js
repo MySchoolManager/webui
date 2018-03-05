@@ -23,8 +23,6 @@ module.exports = function(app, firebaseInstance) {
           }
         })
         .catch(function() {
-  console.log('signup error');          
-          
           res.render('servererror');
         });
   });
@@ -70,8 +68,15 @@ module.exports = function(app, firebaseInstance) {
         .then(function(data) {
           const userData = Object.assign({}, req.body);
           userData.guid = data.uid;
-          req.session.uid = data.uid;
+          if (!req.session.uid) {
+            req.session.uid = data.uid;
+          }
+
           delete userData.password;
+
+          if (req.session.sid) {
+            userData.SchoolId = req.session.sid;
+          }
 
           db.User.create(userData)
               .then(function(user) {
@@ -116,6 +121,10 @@ module.exports = function(app, firebaseInstance) {
                           {SchoolId: school.dataValues.id},
                           {where: {guid: req.session.uid}})
                       .then(function() {
+                        if (!res.session.sid) {
+                          res.session.sid = school.dataValues.id;
+                        }
+
                         res.status(200).send(
                             {message: 'School created User updated'});
                       })

@@ -51,7 +51,7 @@ function errorHandler(err, req, res, next) {
 
 // APP.use(errorHandler);
 
-DB.sequelize.sync({ }).then(function() {
+DB.sequelize.sync({}).then(function() {
   APP.listen(PORT, function() {
     console.log('APP listening on PORT ' + PORT);
   });
