@@ -7,21 +7,28 @@ module.exports = function(app, firebaseInstance) {
   });
 
   app.get('/school', function(req, res) {
-    console.log(req.session.sid);
-    console.log(req.session.uid);
-    
-    if (req.session && req.session.sid) {
-      db.School.findOne({where: {id: req.session.sid}})
-          .then(function(school) {
-            if (school && school.dataValues) {
-              school.dataValues.readonly = true;
-              res.render('school/school', school.dataValues);
+    if (req.session && req.session.uid) {
+      db.User.findOne({where: {guid: req.session.uid}})
+          .then(function(user) {
+            if (user.SchoolId) {
+              db.School.findOne({where: {id: user.SchoolId}})
+                  .then(function(school) {
+                    if (school && school.dataValues) {
+                      school.dataValues.readonly = true;
+                      res.render('school/school', school.dataValues);
+                    } else {
+                      res.render('signupschool');
+                    }
+                  })
+                  .catch(function() {
+                    res.render('servererror');
+                  });
             } else {
-              res.render('signupschool');
+              res.redirect('/signup/school');
             }
           })
           .catch(function() {
-            res.render('servererror');
+            res.redirect('/signout');
           });
     } else {
       res.redirect('/');
@@ -29,12 +36,22 @@ module.exports = function(app, firebaseInstance) {
   });
 
   app.get('/edit/school', function(req, res) {
-    if (req.session && req.session.sid) {
-      db.School.findOne({where: {id: req.session.sid}})
-          .then(function(school) {
-            if (school && school.dataValues) {
-              school.dataValues.readonly = false;
-              res.render('school/school', school.dataValues);
+    if (req.session && req.session.uid) {
+      db.User.findOne({where: {guid: req.session.uid}})
+          .then(function(user) {
+            if (user.SchoolId) {
+              db.School.findOne({where: {id: user.SchoolId}})
+                  .then(function(school) {
+                    if (school && school.dataValues) {
+                      school.dataValues.readonly = false;
+                      res.render('school/school', school.dataValues);
+                    } else {
+                      res.render('signupschool');
+                    }
+                  })
+                  .catch(function() {
+                    res.render('servererror');
+                  });
             } else {
               res.render('signupschool');
             }
@@ -89,7 +106,18 @@ module.exports = function(app, firebaseInstance) {
   });
 
   app.get('/user/:uid', function(req, res) {
-    res.render('users/readonlyuser');
+    db.User.findOne({where: {guid: req.params.uid}})
+        .then(function(user) {
+          if (user && user.dataValues) {
+            user.dataValues.readonly = true;
+            res.render('users/user', user.dataValues);
+          } else {
+            res.render('signupuser');
+          }
+        })
+        .catch(function() {
+          res.render('servererror');
+        });
   });
 
   app.get('/create/user', function(req, res) {
@@ -101,7 +129,18 @@ module.exports = function(app, firebaseInstance) {
   });
 
   app.get('/edit/user/:uid', function(req, res) {
-    res.render('users/editableuser');
+    db.User.findOne({where: {guid: req.params.uid}})
+        .then(function(user) {
+          if (user && user.dataValues) {
+            user.dataValues.readonly = false;
+            res.render('users/user', user.dataValues);
+          } else {
+            res.render('signupuser');
+          }
+        })
+        .catch(function() {
+          res.render('servererror');
+        });
   });
 
   app.get('/edit/notification/:uid', function(req, res) {

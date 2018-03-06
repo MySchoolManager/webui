@@ -45,7 +45,6 @@ require('./controllers/homeController')(APP, firebaseInstance);
 let syncOpt = {};
 
 function errorHandler(err, req, res, next) {
-  console.log('errorHandler');
   res.redirect('/servererror');
 };
 
