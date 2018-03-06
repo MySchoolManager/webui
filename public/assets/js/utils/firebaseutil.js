@@ -33,10 +33,14 @@ $(function() {
       // If user is authenticated route to home
       // else route to sign in page
       if (window.location.pathname.indexOf('signup') === -1) {
-        if (user) {
-          if (window.location.pathname === '/') {
-            window.location = '/home';
-          }
+        if (user && user.uid) {
+          $.ajax(
+               {url: `/api/signin/${user.uid}`, data: formData, method: 'POST'})
+              .done(function() {
+                if (window.location.pathname === '/') {
+                  window.location = '/home';
+                }
+              });
         } else if (
             window.location.pathname !== '/' &&
             window.location.pathname.indexOf('forgot') === -1 &&

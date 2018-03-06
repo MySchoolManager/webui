@@ -26,6 +26,9 @@ const FireBaseUtil = (function() {
       });
 
       this.app.use(session({
+        store: new FirebaseStore({
+          database: ref.database()
+        }),
         secret: 'keyboard cat',
         resave: false,
         saveUninitialized: false

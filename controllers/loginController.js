@@ -20,24 +20,26 @@ module.exports = function(app, firebaseInstance) {
   });
 
   app.post('/api/signin/:uid', function(req, res) {
-    if (!req.session.uid) {
+    if (req.session && !req.session.uid) {
       req.session.uid = req.params.uid;
     }
-    db.User.findOne({where: {
-      guid: req.session.uid
-    }}).then(function(user) {
+
+    db.User.findOne({where: {guid: req.session.uid}}).then(function(user) {
       if (user && user.dataValues) {
-        if (!req.session.sid) {
+        if (req.session && !req.session.sid) {
           req.session.sid = user.dataValues.SchoolId;
         }
-        res.status(200).send({message: 'User Logged in'});              
+
+        res.status(200).send({message: 'User Logged in'});
       }
     });
   });
 
   app.get('/signout', function(req, res) {
-    req.session.uid = null;
-    req.session.sid = null;    
+    if (req.session) {
+      req.session.uid = null;
+      req.session.sid = null;
+    }
     res.redirect('/');
   });
 };

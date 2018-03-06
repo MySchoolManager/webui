@@ -1,3 +1,5 @@
+const db = require('../models');
+
 module.exports = function(app, firebaseInstance) {
   // Create all our routes and set up logic within those routes where required.
   app.get('/home', function(req, res) {
@@ -5,6 +7,9 @@ module.exports = function(app, firebaseInstance) {
   });
 
   app.get('/school', function(req, res) {
+    console.log(req.session.sid);
+    console.log(req.session.uid);
+    
     if (req.session && req.session.sid) {
       db.School.findOne({where: {id: req.session.sid}})
           .then(function(school) {
@@ -88,7 +93,7 @@ module.exports = function(app, firebaseInstance) {
   });
 
   app.get('/create/user', function(req, res) {
-    res.render('users/user', {guid: req.session.uid});
+    res.render('users/user', {guid: req.session ? req.session.uid : null});
   });
 
   app.get('/create/notification', function(req, res) {
@@ -117,11 +122,11 @@ module.exports = function(app, firebaseInstance) {
         .then(function(data) {
           const notificationData = Object.assign({}, req.body);
           notificationData.guid = data.uid;
-          if (!req.session.uid) {
+          if (req.session && !req.session.uid) {
             req.session.uid = data.uid;
           }
 
-          if (req.session.sid) {
+          if (req.session && req.session.sid) {
             notificationData.SchoolId = req.session.sid;
           }
 
