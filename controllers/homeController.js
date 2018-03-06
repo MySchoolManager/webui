@@ -121,7 +121,7 @@ module.exports = function(app, firebaseInstance) {
   });
 
   app.get('/create/user', function(req, res) {
-    res.render('users/user', {guid: req.session ? req.session.uid : null});
+    res.render('users/user', { guid: req.session ? req.session.uid : null });
   });
 
   app.get('/create/notification', function(req, res) {
