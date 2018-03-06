@@ -1,5 +1,13 @@
 const db = require('../models');
 
+
+// Twilio Credentials
+const accountSid = 'AC6fa82cd320b2f0cfbe04b7c1fee7b7ee';
+const authToken = 'c2a2dd5ff37f0b5c9d3da8fc1f32945b';
+
+// require the Twilio module and create a REST client
+const client = require('twilio')(accountSid, authToken);
+
 module.exports = function(app, firebaseInstance) {
   // Create all our routes and set up logic within those routes where required.
   app.get('/home', function(req, res) {
@@ -121,11 +129,21 @@ module.exports = function(app, firebaseInstance) {
   });
 
   app.get('/create/user', function(req, res) {
-    res.render('users/user', { guid: req.session ? req.session.uid : null });
+    res.render('users/user');
   });
 
   app.get('/create/notification', function(req, res) {
-    res.render('notifications/notification');
+    if (req.session && req.session.sid) {
+      db.User.findAll({where: {SchoolId: req.session.sid}})
+          .then(function(users) {
+            res.render('notifications/notification', {users: users});
+          })
+          .catch(function() {
+            res.render('servererror');
+          });
+    } else {
+      res.redirect('/');
+    }
   });
 
   app.get('/edit/user/:uid', function(req, res) {
@@ -161,6 +179,8 @@ module.exports = function(app, firebaseInstance) {
         .then(function(data) {
           const notificationData = Object.assign({}, req.body);
           notificationData.guid = data.uid;
+          const numbers = notificationData.numbers;
+          console.log(notificationData);
           if (req.session && !req.session.uid) {
             req.session.uid = data.uid;
           }
@@ -172,6 +192,18 @@ module.exports = function(app, firebaseInstance) {
           notificationData.timestamp = new Date().getTime();
           db.Message.create(notificationData)
               .then(function(notification) {
+                numbers.split(',').forEach(function(number) {
+                  client.messages.create(
+                      {
+                        to: number,
+                        from: '+14159808798',
+                        body: `${notification.dataValues.subject}: ${
+                            notification.dataValues.description}`,
+                      },
+                      (err, message) => {
+                        console.log('error');
+                      });
+                });
                 res.status(200).send({message: 'notification created'});
               })
               .catch(function(error) {

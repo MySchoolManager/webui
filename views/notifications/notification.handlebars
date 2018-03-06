@@ -52,9 +52,23 @@
                     <label>Description</label>
                     <div class="fields">
                         <div class="field">
-                            <input {{#if readonly}}readonly{{/if}} type="text" name="description" {{#if description}}value="{{description}}" {{/if}} placeholder="Subject">
+                            <input {{#if readonly}}readonly{{/if}} type="text" name="description" {{#if description}}value="{{description}}" {{/if}}
+                                placeholder="Subject">
                         </div>
                     </div>
+                </div>
+                <div class="ui list">
+                    {{#each users}}
+                    <div class="item">
+                        <div class="ui toggle checkbox">
+                            <input id={{id}} value={{phone}} type="checkbox" name="users">
+                        </div>
+                        <img class="ui avatar image" src="/assets/images/rachel.png">
+                        <div class="content">
+                            <a href="/user/{{guid}}" class="header">{{firstName}} {{lastName}}</a>
+                        </div>
+                    </div>
+                    {{/each}}
                 </div>
                 <input {{#if readonly}}readonly{{/if}} type="text" class="hiddenInput" disabled name="guid" {{#if guid}}value="{{guid}}"
                     {{/if}}> {{#if readonly}}

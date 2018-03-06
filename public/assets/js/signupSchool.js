@@ -20,7 +20,7 @@ $(function() {
                 state: ['empty'],
                 country: ['empty'],
                 type: ['empty'],
-                phone: ['empty', 'number', 'minLength[10]', 'maxLength[10]'],
+                phone: ['empty', 'minLength[10]', 'maxLength[12]'],
               }
             })
             .on('submit', function(event) {

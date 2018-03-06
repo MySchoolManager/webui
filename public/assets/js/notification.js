@@ -1,5 +1,6 @@
 // Create sign up object, add functions to object.
 $(function() {
+  $('.checkbox').checkbox();
   app.notification = (function() {
     var notificationObj = function() {
       // Show sign up page when sign up button is clicked.
@@ -10,7 +11,8 @@ $(function() {
               inline: true,
               fields: {
                 subject: ['empty', 'maxLength[140]'],
-                description: ['empty', 'maxLength[140]']
+                description: ['empty', 'maxLength[140]'],
+                users: 'checked'
               }
             })
             .on('submit', function(event) {
@@ -20,6 +22,13 @@ $(function() {
                 var formData = $(this).addClass('loading').form('get values');
                 $(this).find('.processing').removeClass('hidden');
                 $(this).find('.failed').addClass('hidden').find('p').text('');
+                const numbers = [];
+                $.each($('.checkbox').checkbox(), function(ind, ele) {
+                  if($(ele).checkbox('is checked')) {
+                    numbers.push($(ele).find('input').val());
+                  }
+                });
+                formData.numbers = numbers.join();
                 $.ajax({
                    url: formData.guid ?
                        `/api/update/notification/${formData.guid}` :
