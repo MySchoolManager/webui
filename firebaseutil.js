@@ -26,6 +26,9 @@ const FireBaseUtil = (function() {
       });
 
       this.app.use(session({
+        store: new FirebaseStore({
+          database: ref.database()
+        }),
         secret: 'keyboard cat',
         resave: false,
         saveUninitialized: false
@@ -45,6 +48,10 @@ const FireBaseUtil = (function() {
 
     this.createSchool = function() {
       return this.pushChild('/schools', {});
+    };
+
+    this.createNotification = function() {
+      return this.pushChild('/notifications', {});
     };
 
     // Function to add a child to a list in firebase database

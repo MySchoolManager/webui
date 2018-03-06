@@ -19,7 +19,7 @@ $(function() {
                 city: ['empty', 'maxLength[140]'],
                 state: ['empty'],
                 country: ['empty'],
-                phone: ['empty', 'number', 'minLength[10]', 'maxLength[10]'],
+                phone: ['empty', 'minLength[10]', 'maxLength[12]'],
                 email: ['empty', 'email', 'maxLength[140]'],
                 password: ['empty', 'minLength[6]', 'maxLength[140]']
               }
@@ -31,6 +31,7 @@ $(function() {
                 var formData = $(this).addClass('loading').form('get values');
                 $(this).find('.processing').removeClass('hidden');
                 $(this).find('.failed').addClass('hidden').find('p').text('');
+                console.log('(**********' + formData.guid);
                 $.ajax({
                    url: formData.guid ? `/api/update/user/${formData.guid}` :
                                         '/api/create/user',
@@ -48,7 +49,11 @@ $(function() {
                         app.firebaseInstance
                             .signInUser(formData.email, formData.password)
                             .then(function() {
-                              window.location = '/signup/school';
+                              if (window.location.pathname.indexOf('signup') !== -1) {
+                                window.location = '/signup/school';
+                              } else {
+                                window.location = '/users';                                
+                              }
                             });
                       }
                     })

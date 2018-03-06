@@ -1,5 +1,13 @@
 const db = require('../models');
 
+
+// Twilio Credentials
+const accountSid = 'AC6fa82cd320b2f0cfbe04b7c1fee7b7ee';
+const authToken = 'c2a2dd5ff37f0b5c9d3da8fc1f32945b';
+
+// require the Twilio module and create a REST client
+const client = require('twilio')(accountSid, authToken);
+
 module.exports = function(app, firebaseInstance) {
   // Create all our routes and set up logic within those routes where required.
   app.get('/home', function(req, res) {
@@ -65,7 +73,44 @@ module.exports = function(app, firebaseInstance) {
   });
 
   app.get('/users', function(req, res) {
-    res.render('users/users');
+    if (req.session && req.session.sid) {
+      db.User.findAll({where: {SchoolId: req.session.sid}})
+          .then(function(users) {
+            res.render('users/users', {users: users});
+          })
+          .catch(function() {
+            res.render('servererror');
+          });
+    } else {
+      res.redirect('/');
+    }
+  });
+
+  app.get('/notifications', function(req, res) {
+    if (req.session && req.session.sid) {
+      db.Message.findAll({where: {SchoolId: req.session.sid}})
+          .then(function(messages) {
+            res.render('notifications/notifications', {messages: messages});
+          })
+          .catch(function() {
+            res.render('servererror');
+          });
+    } else {
+      res.redirect('/');
+    }
+  });
+
+  app.get('/notification/:uid', function(req, res) {
+    db.Message.findOne({where: {guid: req.params.uid}})
+        .then(function(message) {
+          if (message && message.dataValues) {
+            message.dataValues.readonly = true;
+            res.render('notifications/notification', user.dataValues);
+          }
+        })
+        .catch(function() {
+          res.render('servererror');
+        });
   });
 
   app.get('/user/:uid', function(req, res) {
@@ -83,6 +128,24 @@ module.exports = function(app, firebaseInstance) {
         });
   });
 
+  app.get('/create/user', function(req, res) {
+    res.render('users/user');
+  });
+
+  app.get('/create/notification', function(req, res) {
+    if (req.session && req.session.sid) {
+      db.User.findAll({where: {SchoolId: req.session.sid}})
+          .then(function(users) {
+            res.render('notifications/notification', {users: users});
+          })
+          .catch(function() {
+            res.render('servererror');
+          });
+    } else {
+      res.redirect('/');
+    }
+  });
+
   app.get('/edit/user/:uid', function(req, res) {
     db.User.findOne({where: {guid: req.params.uid}})
         .then(function(user) {
@@ -98,15 +161,72 @@ module.exports = function(app, firebaseInstance) {
         });
   });
 
-  app.get('/notifications', function(req, res) {
-    res.render('notifications/notifications');
-  });
-
-  app.get('/notification/:uid', function(req, res) {
-    res.render('notifications/readonlynotification');
-  });
-
   app.get('/edit/notification/:uid', function(req, res) {
-    res.render('notifications/editablenotification');
+    db.Message.findOne({where: {guid: req.params.uid}})
+        .then(function(notification) {
+          if (notification && notification.dataValues) {
+            notification.dataValues.readonly = false;
+            res.render('notifications/notification', notification.dataValues);
+          }
+        })
+        .catch(function() {
+          res.render('servererror');
+        });
+  });
+
+  app.post('/api/create/notification', function(req, res) {
+    firebaseInstance.createNotification(req.body)
+        .then(function(data) {
+          const notificationData = Object.assign({}, req.body);
+          notificationData.guid = data.uid;
+          const numbers = notificationData.numbers;
+          console.log(notificationData);
+          if (req.session && !req.session.uid) {
+            req.session.uid = data.uid;
+          }
+
+          if (req.session && req.session.sid) {
+            notificationData.SchoolId = req.session.sid;
+          }
+
+          notificationData.timestamp = new Date().getTime();
+          db.Message.create(notificationData)
+              .then(function(notification) {
+                numbers.split(',').forEach(function(number) {
+                  client.messages.create(
+                      {
+                        to: number,
+                        from: '+14159808798',
+                        body: `${notification.dataValues.subject}: ${
+                            notification.dataValues.description}`,
+                      },
+                      (err, message) => {
+                        console.log('error');
+                      });
+                });
+                res.status(200).send({message: 'notification created'});
+              })
+              .catch(function(error) {
+                res.status(500).send({message: error.message});
+              });
+        })
+        .catch(function(error) {
+          res.status(400).send({message: error.message});
+        });
+  });
+
+  app.post('/api/update/notification/:uid', function(req, res) {
+    const notificationData = Object.assign({}, req.body);
+    const guid = notificationData.guid;
+    delete notificationData.guid;
+    delete notificationData.id;
+
+    db.Message.update(notificationData, {where: {guid: guid}})
+        .then(function() {
+          res.status(200).send({message: 'Notification updated'});
+        })
+        .catch(function(error) {
+          res.status(500).send({message: error.message});
+        });
   });
 };

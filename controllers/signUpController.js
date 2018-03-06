@@ -6,7 +6,7 @@ module.exports = function(app, firebaseInstance) {
   });
 
   app.get('/signup/user', function(req, res) {
-    if (req.session.uid) {
+    if (req.session && req.session.uid) {
       res.redirect(`/signup/user/${req.session.uid}`);
     } else {
       res.render('signupuser');
@@ -23,13 +23,12 @@ module.exports = function(app, firebaseInstance) {
           }
         })
         .catch(function() {
-          console.log('signup error');
           res.render('servererror');
         });
   });
 
   app.get('/signup/school', function(req, res) {
-    if (req.session.uid) {
+    if (req.session && req.session.uid) {
       res.redirect(`/signup/school/${req.session.uid}`);
     } else {
       res.render('signupschool');
@@ -69,8 +68,15 @@ module.exports = function(app, firebaseInstance) {
         .then(function(data) {
           const userData = Object.assign({}, req.body);
           userData.guid = data.uid;
-          req.session.uid = data.uid;
+          if (req.session && !req.session.uid) {
+            req.session.uid = data.uid;
+          }
+
           delete userData.password;
+
+          if (req.session && req.session.sid) {
+            userData.SchoolId = req.session.sid;
+          }
 
           db.User.create(userData)
               .then(function(user) {
@@ -115,6 +121,10 @@ module.exports = function(app, firebaseInstance) {
                           {SchoolId: school.dataValues.id},
                           {where: {guid: req.session.uid}})
                       .then(function() {
+                        if (req.session) {
+                          req.session.sid = school.dataValues.id;
+                        }
+
                         res.status(200).send(
                             {message: 'School created User updated'});
                       })
