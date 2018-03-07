@@ -31,7 +31,11 @@ const FireBaseUtil = (function() {
         }),
         secret: 'keyboard cat',
         resave: false,
-        saveUninitialized: false
+        saveUninitialized: false,
+        cookie: {
+          expires: false
+        },
+        expires: false
       }));
 
       this.database = ref.database();
