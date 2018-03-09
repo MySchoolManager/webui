@@ -27,6 +27,7 @@
     "firebase-admin": "5.8.0",
     "mysql": "^2.15.0",
     "mysql2": "^1.5.2",
+    "nightmare": "^3.0.0",
     "sequelize": "^4.34.0",
     "twilio": "^3.13.0"
   }
